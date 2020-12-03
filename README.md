@@ -1,6 +1,26 @@
 # Description
 A transpiler that converts an ML style syntax into the [Advanced Student Language](https://docs.racket-lang.org/htdp-langs/advanced.html). Built mostly for learning purposes.
 
+# Requirements
+## Release
++ A computer running Linux
+## Source
++ [OCaml](https://ocaml.org/)
++ [Dune](https://dune.build/)
+
+# Installation
+## Release
+1. Download and unzip the [latest release](https://github.com/Techser/BML/releases)
+2. Run `cd release` to change to the unzipped directory.
+3. Run `./convert.sh example.ml example.rkt`. This should produce the file `example.rkt` containing the transpiled version of `example.ml`.
+4. Run `./tree.sh example.ml`. This should print out the syntax tree of `example.rkt`.
+
+## Source
+1. Run `git clone https://github.com/Techser/BML.git`.
+2. Run `dune build` in the cloned directory. This may print out some complaints as we are statically linking the code.
+3. Run `./convert.sh example.ml example.rkt`. This should produce the file `example.rkt` containing the transpiled version of `example.ml`.
+4. Run `./tree.sh example.ml`. This should print out the syntax tree of `example.rkt`.
+
 # Syntax
 The following details the syntax of the language and shows the produced ASL code.
 A more formal definition can be found in `syntax.bnf`.
