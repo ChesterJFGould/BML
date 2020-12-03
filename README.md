@@ -144,3 +144,4 @@ If we don't follow these rules the parser will get confused and think the expres
 + Refactor code to use exceptions instead of the result type
 + Document code better
 + Add at least some integration tests if not unit tests
++ Add support for tags (e.g. @template, @signature, etc.)
