@@ -21,9 +21,16 @@ A transpiler that converts an ML style syntax into the [Advanced Student Languag
 3. Run `./convert.sh example.ml example.rkt`. This should produce the file `example.rkt` containing the transpiled version of `example.ml`.
 4. Run `./tree.sh example.ml`. This should print out the syntax tree of `example.rkt`.
 
+# Running The Programs
+As shown in the installation instructions we can convert a BML file to a ASL file by running<br>`./convert.sh <input file> <output file>`
+
+All of the programs output to stdout, so for example if we want to see the tokenized version of a file we can run <br> `./<path to lexer.exe> <input file>`.
+This makes the program incredibly extensible and modular as adding a new stage to the conversion pipeline is as easy as using the given libraries to parse the output of a program, do whatever you want to it, then use the libraries to print in a form the next stages can understand.
+
 # Syntax
 The following details the syntax of the language and shows the produced ASL code.
 A more formal definition can be found in `syntax.bnf`.
+
 ## Function Application
 `function arg1 arg2 ...` -> `(function arg1 arg2 ...)`
 
