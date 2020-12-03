@@ -12,3 +12,5 @@ _build/*
 !*.md
 !LICENSE
 !.gitignore
+
+release/*
