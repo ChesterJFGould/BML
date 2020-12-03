@@ -1,59 +1,59 @@
-;; The first three lines of this file were inserted by DrRacket. They record metadata
-;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-intermediate-lambda-reader.ss" "lang")((modname example) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #t)))
+#reader(lib "htdp-advanced-reader.ss" "lang")
+	((modname example2) (read-case-sensitive #t) (teachpacks ()) (htdp-settings 
+	 #(#t constructor repeating-decimal #f #t none #f () #t)))
 (define (fac n)
-         (cond [(= n
-            0) 1]
-               [else (* n
-                  (fac (- n
-                     1)))]))
+        (cond [(= n
+                  0) 1]
+              [else (* n
+                       (fac (- n
+                               1)))]))
 
 
 
 (define pish
-         3.141593)
+        3.141593)
 
 
 
 (define-struct name
-                (first last))
+               (first last))
 
 
 
 (+ 3
-    (* 4
-       5))
+   (* 4
+      5))
 
 
 
 (map (lambda (x)
-         (* x
-            2))
-      (list 1
-            2
-            3))
+             (* x
+                2))
+     (list 1
+           2
+           3))
 
 
 
 (local [(define e
-         10)]
-        (expt e
-              pish))
+               10)]
+       (expt e
+             pish))
 
 
 
 (cond [(= pish
-    10) (local [(define msg
-         "Good approximation")]
-        msg)]
-       [else "Bad approximation"])
+          10) (local [(define msg
+                               "Good approximation")]
+                       msg)]
+      [else "Bad approximation"])
 
 
 
 (or (and true
-      false)
-     (> 2
-        1))
+         false)
+    (> 2
+       1))
 
 
 
@@ -66,10 +66,10 @@ pish
 
 
 (define succ
-         add1)
+        add1)
 
 
 
 (+ (+ 1
-    (succ 1))
-    3)
+      (succ 1))
+   3)
