@@ -3,6 +3,7 @@ A transpiler that converts an ML style syntax into the [Advanced Student Languag
 
 # Syntax
 The following details the syntax of the language and shows the produced ASL code.
+A more formal definition can be found in `syntax.bnf`.
 ## Function Application
 `function arg1 arg2 ...` -> `(function arg1 arg2 ...)`
 
@@ -64,3 +65,7 @@ The following details the syntax of the language and shows the produced ASL code
 
 `name-last (make-name "Brian" "Kernighan")` -> `(name-last (make-name "Brian" "Kernighan"))`
 
+# TODO
++ Refactor code to use exceptions instead of the result type
++ Document code better
++ Add at least some integration tests if not unit tests
