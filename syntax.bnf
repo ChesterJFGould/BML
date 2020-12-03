@@ -7,7 +7,7 @@ statement = def
 
 def = "let" name '=' expr
     | "let" name {name} '=' expr
-    | "type" name = '{' {name ';' } '}';
+    | "type" name = '{' {name ';' } '}'
 
 argument = name
          | number
