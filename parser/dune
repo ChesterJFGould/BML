@@ -1,3 +1,4 @@
 (executable
 	(name parser)
+	(flags (:standard -ccopt -static))
 	(libraries location tokens nodes))

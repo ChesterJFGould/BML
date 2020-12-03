@@ -34,6 +34,8 @@ type t =
 	| If of Location.t
 	| Fun of Location.t
 	| Type of Location.t
+	| Then of Location.t
+	| Else of Location.t
 
 let location (token : t) : Location.t =
 	match token with
@@ -72,6 +74,50 @@ let location (token : t) : Location.t =
 	| If l -> l
 	| Fun l -> l
 	| Type l -> l
+	| Then l -> l
+	| Else l -> l
+
+let is_same_kind (token_1 : t) (token_2 : t) : bool =
+	match (token_1, token_2) with
+	| (Comment _, Comment _)
+	| (LParen _, LParen _)
+	| (RParen _, RParen _)
+	| (LBrace _, LBrace _)
+	| (RBrace _, RBrace _)
+	| (LBracket _, LBracket _)
+	| (RBracket _, RBracket _)
+	| (Arrow _, Arrow _)
+	| (Semicolon _, Semicolon _)
+	| (Bar _, Bar _)
+	| (String _, String _)
+	| (Float _, Float _)
+	| (Int _, Int _)
+	| (Identifier _, Identifier _)
+	(* Operators *)
+	| (Equals _, Equals _)
+	| (LessThan _, LessThan _)
+	| (GreaterThan _, GreaterThan _)
+	| (LessThanEqual _, LessThanEqual _)
+	| (GreaterThanEqual _, GreaterThanEqual _)
+	| (Add _, Add _)
+	| (Subtract _, Subtract _)
+	| (Multiply _, Multiply _)
+	| (Divide _, Divide _)
+	| (And _, And _)
+	| (Or _, Or _)
+	| (Not _, Not _)
+	(* Keywords *)
+	| (Let _, Let _)
+	| (In _, In _)
+	| (Cond _, Cond _)
+	| (Of _, Of _)
+	| (If _, If _)
+	| (Fun _, Fun _)
+	| (Type _, Type _)
+	| (Then _, Then _)
+	| (Else _, Else _)
+		-> true
+	| _ -> false
 
 let is_comment (token : t) : bool =
 	match token with
@@ -156,6 +202,8 @@ let to_string (token : t) : string =
 	| If l -> Printf.sprintf "If %s" (Location.to_string l)
 	| Fun l -> Printf.sprintf "Fun %s" (Location.to_string l)
 	| Type l -> Printf.sprintf "Type %s" (Location.to_string l)
+	| Then l -> Printf.sprintf "Then %s" (Location.to_string l)
+	| Else l -> Printf.sprintf "Else %s" (Location.to_string l)
 
 (* I love kakoune macros *)
 let of_string (s : string) : t option =
@@ -335,6 +383,16 @@ let of_string (s : string) : t option =
 		| Some l -> Some (Type l)
 		| None -> None
 		end
+	| "Then"::tl ->
+		begin match Location.of_string_list tl with
+		| Some l -> Some (Then l)
+		| None -> None
+		end
+	| "Else"::tl ->
+		begin match Location.of_string_list tl with
+		| Some l -> Some (Else l)
+		| None -> None
+		end
 	| _ -> None
 
 let literal (token : t) : string =
@@ -374,3 +432,5 @@ let literal (token : t) : string =
 	| If _ -> "if"
 	| Fun _ -> "fun"
 	| Type _ -> "type"
+	| Then _ -> "then"
+	| Else _ -> "else"

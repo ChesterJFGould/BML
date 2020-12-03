@@ -23,6 +23,11 @@
 
 
 
+(* (add1 3)
+   4)
+
+
+
 (define-struct name
                (first last))
 
@@ -84,3 +89,43 @@
 
 (and true
      (not false))
+
+
+
+(cond [true "True!"]
+      [false "False!"]
+      [else "Base case!"])
+
+
+
+(map (lambda (x)
+             (* x
+                2))
+     (list 1
+           2
+           3))
+
+
+
+(foldl (lambda (x y)
+               (+ x
+                  y))
+       0
+       (list 1
+             2
+             3))
+
+
+
+(foldl +
+       0
+       (list 1
+             2
+             3))
+
+
+
+(local [(define at
+               (make-name "Alan"
+                          "Turing"))]
+       (name-first at))

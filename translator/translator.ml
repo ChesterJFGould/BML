@@ -34,7 +34,7 @@ let rec s_of_expr (expr : Nodes.expr) : Sexpr.t =
 			::(Array.to_list (Array.map (fun (cond, cons) : Sexpr.t ->
 				ListB [s_of_expr cond; s_of_expr cons]) cases)))
 	| If (cond, cons, alt, _) ->
-		ListP [s_of_expr cond; s_of_expr cons; s_of_expr alt]
+		ListP [Symbol "if"; s_of_expr cond; s_of_expr cons; s_of_expr alt]
 
 and s_of_def (def : Nodes.def) : Sexpr.t =
 	match def with

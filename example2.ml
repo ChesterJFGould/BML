@@ -5,6 +5,7 @@ let fib n =
 
 ; fib 5
 ; 1 + sqr 5 * 9
+; add1 3 * 4
 
 type name = {first; last}
 
@@ -27,3 +28,16 @@ let fac n = foldr ( * ) 1 (build-list n add1)
 
 ; !true
 ; true and !false
+
+;
+cond
+| true -> "True!"
+| false -> "False!"
+| else -> "Base case!"
+
+; map (fun x -> x * 2) [1; 2; 3]
+
+; foldl (fun x y -> x + y) 0 [1; 2; 3]
+; foldl (+) 0 [1; 2; 3]
+
+let at = make-name "Alan" "Turing" in name-first at

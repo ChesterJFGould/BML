@@ -108,6 +108,10 @@ let keyword_tokenizer (cq : CharQueue.t) : (Tokens.t option, string * Location.t
 		CharQueue.njunk 3 cq; Ok (Some (And location))
 	| ['o'; 'r'; e; _; _] when not (String.contains identifier_charset e) ->
 		CharQueue.njunk 2 cq; Ok (Some (Or location))
+	| ['t'; 'h'; 'e'; 'n'; e] when not (String.contains identifier_charset e) ->
+		CharQueue.njunk 4 cq; Ok (Some (Then location))
+	| ['e'; 'l'; 's'; 'e'; e] when not (String.contains identifier_charset e) ->
+		CharQueue.njunk 4 cq; Ok (Some (Else location))
 	| _ -> Ok None
 
 let identifier_tokenizer (cq : CharQueue.t) : (Tokens.t option, string * Location.t) result =

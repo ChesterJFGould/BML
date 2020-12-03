@@ -163,6 +163,48 @@ and parse_cond (tq : TokenQueue.t) : (Nodes.expr, error) result =
 	| Some t -> Error (unexpected_token t "a cond expression")
 	| None -> Error (unexpected_eof tq.location "a cond expression")
 
+and parse_if (tq : TokenQueue.t) : (Nodes.expr, error) result =
+	(* This is exhibit number 1 for why this needs to be rewritten with
+	 * exceptions.
+	 *)
+	let if_t = TokenQueue.next tq
+	in let cond = parse_expression tq 0
+	in let then_t = TokenQueue.next tq
+	in let cons = parse_expression tq 0
+	in let else_t = TokenQueue.next tq
+	in let alt = parse_expression tq 0
+	in match (if_t, cond, then_t, cons, else_t, alt) with
+	| (Some (If l), Ok cond, Some (Then _), Ok cons, Some (Else _), Ok alt) ->
+		Ok (If (cond, cons, alt, l))
+	| (Some t, _, _, _, _, _)
+	when not (Tokens.is_same_kind t (If (Tokens.location t))) ->
+		Error (unexpected_token t "an if expression")
+	| (None, _, _, _, _, _) ->
+		Error (unexpected_eof tq.location "an if expression")
+	| (_, Error e, _, _, _, _) ->
+		Error e
+	| (_, _, Some t, _, _, _)
+	when not (Tokens.is_same_kind t (If (Tokens.location t))) ->
+		Error (unexpected_token t "a then")
+	| (_, _, None, _, _, _) ->
+		Error (unexpected_eof tq.location "\"then\"")
+	| (_, _, _, Error e, _, _)
+		-> Error e
+	| (_, _, _, _, Some t, _)
+	when not (Tokens.is_same_kind t (If (Tokens.location t))) ->
+		Error (unexpected_token t "an else")
+	| (_, _, _, _, None, _) ->
+		Error (unexpected_eof tq.location "an else")
+	| (_, _, _, _, _, Error e) ->
+		Error e
+	| _ -> Error ("parser's broken", tq.location)
+
+and parse_else_identifier (tq : TokenQueue.t) : (Nodes.expr, error) result =
+	match TokenQueue.next tq with
+	| Some (Else l) -> Ok (Identifier ("else", l))
+	| Some t -> Error (unexpected_token t "an else identifier")
+	| None -> Error (unexpected_eof tq.location "an else identifier")
+
 and parse_prefix_operator (tq : TokenQueue.t) : (Nodes.expr, error) result =
 	let identifier_of_token (token : Tokens.t) : (Nodes.expr, error) result =
 		match token with
@@ -192,6 +234,8 @@ and prefix_parser (token : Tokens.t) : (TokenQueue.t -> ((Nodes.expr, error) res
 	| LBracket _ -> Some parse_list
 	| Fun _ -> Some parse_lambda
 	| Cond _ -> Some parse_cond
+	| If _ -> Some parse_if
+	| Else _ -> Some parse_else_identifier
 	| t when Tokens.is_prefix_operator t -> Some parse_prefix_operator
 	| _ -> None
 

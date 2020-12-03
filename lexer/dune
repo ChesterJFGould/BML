@@ -1,3 +1,4 @@
 (executable
 	(name lexer)
+	(flags (:standard -ccopt -static))
 	(libraries tokens location))

@@ -1,3 +1,4 @@
 (executable
 	(name translator)
+	(flags (:standard -ccopt -static))
 	(libraries nodes sexpr))
