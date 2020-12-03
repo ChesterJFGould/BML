@@ -1,0 +1,14 @@
+*
+!*/
+
+_build/*
+
+!*.ml
+!*.src
+!*.sh
+!*.rkt
+!*dune
+!dune-project
+!*.md
+!LICENSE
+!.gitignore

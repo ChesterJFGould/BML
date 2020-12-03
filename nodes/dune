@@ -1,0 +1,3 @@
+(library
+	(name nodes)
+	(libraries location))

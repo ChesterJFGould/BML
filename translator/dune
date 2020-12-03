@@ -1,0 +1,3 @@
+(executable
+	(name translator)
+	(libraries nodes sexpr))
