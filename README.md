@@ -86,7 +86,7 @@ A more formal definition can be found in `syntax.bnf`.
 `name-last (make-name "Brian" "Kernighan")` -> `(name-last (make-name "Brian" "Kernighan"))`
 
 ## Top Level Expressions
-If we want to run multiply separate expressions at the top level of our file we can do so by separating them with a semicolon.
+If we want to run multiple separate expressions at the top level of our file we can do so by separating them with a semicolon.
 
         1 + 1
         ; sqr 3
@@ -109,7 +109,7 @@ We can put the semicolons wherever we like as long as they are between the expre
         
         (sqr 3)
         
-Keep in mind this is only for expressions, we can have multiply definitions in a row without a semicolon.
+Keep in mind this is only for expressions, we can have multiple definitions in a row without a semicolon.
 
         let x = 5
         let y = 6
