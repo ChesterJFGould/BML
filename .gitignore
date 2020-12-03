@@ -12,5 +12,6 @@ _build/*
 !*.md
 !LICENSE
 !.gitignore
+!*.bnf
 
 release/*

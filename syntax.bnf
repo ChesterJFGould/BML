@@ -1,0 +1,26 @@
+name = a sequence of [a-z], [A-Z], [0-9], or +-*/=<>_?!
+
+program = {statement [';']}
+
+statement = def
+          | expr
+
+def = "let" name '=' expr
+    | "let" name {name} '=' expr
+    | "type" name = '{' {name ';' } '}';
+
+argument = name
+         | number
+         | string
+         | '(' expr ')'
+
+expr = expr op expr
+     | op expr
+     | op
+     | argument
+     | expr {argument}
+     | "if" expr "then" expr "else" expr
+     | "cond" {'|' expr "->" expr} ['|' "else" "->" expr]
+     | def "in" expr
+     | "fun" {name} "->" expr
+     | '[' {expr ';'} ']'
