@@ -85,6 +85,61 @@ A more formal definition can be found in `syntax.bnf`.
 
 `name-last (make-name "Brian" "Kernighan")` -> `(name-last (make-name "Brian" "Kernighan"))`
 
+## Top Level Expressions
+If we want to run multiply separate expressions at the top level of our file we can do so by separating them with a semicolon.
+
+        1 + 1
+        ; sqr 3
+        
+
+->
+
+        (+ 1 1)
+        
+        (sqr 3)
+
+We can put the semicolons wherever we like as long as they are between the expressions.
+
+        1 + 1;
+        sqr 3
+
+->
+
+        (+ 1 1)
+        
+        (sqr 3)
+        
+Keep in mind this is only for expressions, we can have multiply definitions in a row without a semicolon.
+
+        let x = 5
+        let y = 6
+
+->
+
+        (define x 5)
+        
+        (define y 6)
+
+However we must separate a definition followed by an expression.
+
+        let x = 40
+        ; x + 2
+
+->
+
+        (define x 40)
+        
+        (+ x 40)
+
+If we don't follow these rules the parser will get confused and think the expressions are all part of the same expression.
+
+        let x = 40
+        
+        x + 2
+        
+->
+
+        (define x (+ (40 x) 2))
 # TODO
 + Refactor code to use exceptions instead of the result type
 + Document code better
