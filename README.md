@@ -47,6 +47,7 @@ A more formal definition can be found in `syntax.bnf`.
 
 ## Lists
 `[1; 2; 3]` -> `(list 1 2 3)`
+
 `[1; 2; 3; 4;]` -> `(list 1 2 3 4)`
 
 ## Definition
