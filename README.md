@@ -1,3 +1,11 @@
+# Table of Contents
++ [Description](#description)
++ [Requirements](#requirements)
++ [Installation](#installation)
++ [Running the Programs](#running-the-programs)
++ [Syntax](#syntax)
++ [TODO](#todo)
+
 # Description
 A transpiler that converts an ML style syntax into the [Advanced Student Language](https://docs.racket-lang.org/htdp-langs/advanced.html). Built mostly for learning purposes.
 
@@ -148,9 +156,14 @@ If we don't follow these rules the parser will get confused and think the expres
 ->
 
         (define x (+ (40 x) 2))
+## Comments
+Comments are delimited by `(*` and `*)`.
+Currently the translator doesn't attempt to inject comments into the ASL code, although this is possible as the parser is aware of them.
+
 # TODO
 + Refactor code to use exceptions instead of the result type
 + Document code better
 + Add at least some integration tests if not unit tests
++ Add support for comments
 + Add support for tags (e.g. @template, @signature, etc.)
 + Reverse transpiler (ASL -> BML)
