@@ -12,6 +12,8 @@ A transpiler that converts an ML style syntax into the [Advanced Student Languag
 # Requirements
 ## Release
 + A computer running Linux
+
+If anyone has access to a windows or macos computer and would like to provide compiled code for those platforms please contact me.
 ## Source
 + [OCaml](https://ocaml.org/)
 + [Dune](https://dune.build/)
