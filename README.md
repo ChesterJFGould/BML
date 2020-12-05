@@ -79,7 +79,7 @@ A more formal definition can be found in `syntax.bnf`.
     cond
     | true -> "True!"
     | false -> "False!"
-    | else -> "Base case!"`
+    | else -> "Base case!"
 ->
 
     (cond [true "True!"]
@@ -161,7 +161,7 @@ Comments are delimited by `(*` and `*)`.
 Currently the translator doesn't attempt to inject comments into the ASL code, although this is possible as the parser is aware of them.
 
 # TODO
-+ Refactor code to use exceptions instead of the result type
++ ~~Refactor code to use exceptions instead of the result type~~
 + Document code better
 + Add at least some integration tests if not unit tests
 + Add support for comments
