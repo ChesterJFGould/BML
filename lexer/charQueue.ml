@@ -1,3 +1,5 @@
+(* Essentially a wrapper around Stream that keeps track of the current location
+ * in the file. *)
 type t = {
 	stream : char Stream.t;
 	location : Location.t;

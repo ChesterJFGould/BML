@@ -1,6 +1,8 @@
+(* Charsets that are used by mutliple functions *)
 let whitespace_charset = " \n\t\r"
 let identifier_charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/=<>_?!"
 
+(* Matches any sequence of characters delimited by (* *) *)
 let comment_tokenizer (cq : CharQueue.t) : (Tokens.t option, string * Location.t) result =
 	let location = Location.copy cq.location
 	in let rec parse_comment (comment : string) : (Tokens.t option, string * Location.t) result =
@@ -12,6 +14,7 @@ let comment_tokenizer (cq : CharQueue.t) : (Tokens.t option, string * Location.t
 	| ['('; '*'] -> CharQueue.njunk 2 cq; parse_comment ""
 	| _ -> Ok None
 
+(* Matches any single character symbols that could become a token. *)
 let simple_symbol_tokenizer (cq : CharQueue.t) : (Tokens.t option, string * Location.t) result =
 	let location = Location.copy cq.location
 	in let (token : Tokens.t option)  =
@@ -37,6 +40,7 @@ let simple_symbol_tokenizer (cq : CharQueue.t) : (Tokens.t option, string * Loca
 	if Option.is_some token then CharQueue.junk cq;
 	Ok token
 
+(* Matches any sequence of symbols that could become a token. *)
 let long_symbol_tokenizer (cq : CharQueue.t) : (Tokens.t option, string * Location.t) result =
 	let location = Location.copy cq.location
 	in match CharQueue.npeek 2 cq with
@@ -45,6 +49,7 @@ let long_symbol_tokenizer (cq : CharQueue.t) : (Tokens.t option, string * Locati
 	| ['<'; '='] -> CharQueue.njunk 2 cq; Ok (Some (LessThanEqual location))
 	| _ -> Ok None
 
+(* Matches any sequence of characters delimited by " but parses \" into a ". *)
 let string_tokenizer (cq : CharQueue.t) : (Tokens.t option, string * Location.t) result =
 	let location = Location.copy cq.location
 	in let rec parse_string (s : string) : (Tokens.t option, string * Location.t) result =
@@ -52,17 +57,23 @@ let string_tokenizer (cq : CharQueue.t) : (Tokens.t option, string * Location.t)
 		| ['\\'; '"'] -> CharQueue.njunk 2 cq; parse_string (s ^ "\"")
 		| '"'::_ -> CharQueue.junk cq; Ok (Some (String (s, location)))
 		| c::_ -> CharQueue.junk cq; parse_string (s ^ (String.make 1 c))
-		| [] -> Error ("Unexpected end of file while parsing string, expected closing \"", Location.copy cq.location)
+		| [] ->
+			Error ("Unexpected end of file while parsing string, expected closing \"",
+				Location.copy cq.location)
 	in match CharQueue.peek cq with
 	| Some '"' -> CharQueue.junk cq; parse_string ""
 	| _ -> Ok None
 
+(* Matches an int of the form 314 or 159e265, or a float of the form 3.58 or 97.93e23 *)
 let number_tokenizer (cq : CharQueue.t) : (Tokens.t option, string * Location.t) result =
 	let number_charset = "0123456789"
 	in let location = Location.copy cq.location
+	(* Just adds TokenQueue.next to the nums string until it isn't a digit *)
 	in let rec parse_digits (nums : string) : string =
 		match CharQueue.peek cq with
-		| Some n when String.contains number_charset n -> CharQueue.junk cq; parse_digits (nums ^ (String.make 1 n))
+		| Some n when String.contains number_charset n ->
+			CharQueue.junk cq;
+			parse_digits (nums ^ (String.make 1 n))
 		| _ -> nums
 	in let parse_float (integer_part : string) : Tokens.t =
 		let fractional_part = parse_digits ""
@@ -73,6 +84,7 @@ let number_tokenizer (cq : CharQueue.t) : (Tokens.t option, string * Location.t)
 			in let base = float_of_string (integer_part ^ "." ^ fractional_part)
 			in Float (base ** exponent, location)
 		| _ -> Float (float_of_string (integer_part ^ "." ^ fractional_part), location)
+	(* Parses an int unless it encounters a ".". If it does it calls parse_float *)
 	in let parse_int (first_digit : char) : Tokens.t =
 		let base = parse_digits (String.make 1 first_digit)
 		in match CharQueue.peek cq with
@@ -84,9 +96,13 @@ let number_tokenizer (cq : CharQueue.t) : (Tokens.t option, string * Location.t)
 			in Int (int_of_float (base ** exponent), location)
 		| _ -> Int (int_of_string base, location)
 	in match CharQueue.peek cq with
-	| Some n when String.contains number_charset n -> CharQueue.junk cq; Ok (Some (parse_int n))
+	| Some n when String.contains number_charset n -> =
+		CharQueue.junk cq;
+		Ok (Some (parse_int n))
 	| _ -> Ok None
 
+(* Matches a sequence of characters that could be turned into a keyword and that
+ * are not followed by another character in the identifier charset. *)
 let keyword_tokenizer (cq : CharQueue.t) : (Tokens.t option, string * Location.t) result =
 	let location = Location.copy cq.location
 	in match CharQueue.npeek 5 cq with
@@ -114,6 +130,7 @@ let keyword_tokenizer (cq : CharQueue.t) : (Tokens.t option, string * Location.t
 		CharQueue.njunk 4 cq; Ok (Some (Else location))
 	| _ -> Ok None
 
+(* Matches a sequence of characters in the identifier charset *)
 let identifier_tokenizer (cq : CharQueue.t) : (Tokens.t option, string * Location.t) result =
 	let location = Location.copy cq.location
 	in let rec parse_identifier (atom : string) : (Tokens.t option, string * Location.t) result =
@@ -126,7 +143,11 @@ let identifier_tokenizer (cq : CharQueue.t) : (Tokens.t option, string * Locatio
 	| Some c when String.contains identifier_charset c -> CharQueue.junk cq; parse_identifier (String.make 1 c)
 	| _ -> Ok None
 
+(* Tries to tokenize and print the given CharQueue until EOF or an error *)
 let rec lex (cq : CharQueue.t) : unit =
+	(* A tokenizer function takes in a CharQueue and returns Ok Some if it
+	 * matched, Ok None if it didn't match, or Error if there was an error
+	 * during matching (for example a string having no closing quote). *)
 	let tokenizers = [|
 		comment_tokenizer;
 		long_symbol_tokenizer;
@@ -156,6 +177,7 @@ let rec lex (cq : CharQueue.t) : unit =
 		| None -> ()
 		end
 
+(* Tokenizes all files passed as arguments or stdin if none are. *)
 let () : unit =
 	if Array.length Sys.argv > 1 then
 		for i = 1 to Array.length Sys.argv - 1 do
